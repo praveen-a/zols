@@ -5,6 +5,7 @@
     $.fn.makeform = function(entityUrl, theme, themeUrl, onRender, dataObj) {
         console.log('dataObj ' + JSON.stringify(dataObj));
         formDiv = this;
+        formDiv.templates = new Object();
         this.themeUrl = themeUrl;
         this.theme = theme;
         this.onRender = onRender;
@@ -15,13 +16,15 @@
         formDiv.empty();
         formDiv.htmlText = "";
         formDiv.firstEntity = true;
-        formDiv.renderEntity(formDiv.attr('name'));
-        formDiv.firstEntity = true;
+        var attribute = new Object({type: formDiv.attr('name')});
+        formDiv.renderEntity(attribute);
+        formDiv.firstEntity = false;
         formDiv.html(formDiv.htmlText);
         formDiv.onRender();
         $('.jqte-test').jqte();
+        formDiv.dropdownFiller();
         formDiv.htmlText = "";
-
+        
         return this;
     };
 
@@ -33,9 +36,9 @@
             nameattribute.type = "String";
             nameattribute.description = "Name";
             nameattribute.label = "Name";
-            if(formDiv.dataObj){
+            if (formDiv.dataObj) {
                 nameattribute.value = formDiv.dataObj.name;
-            }            
+            }
 
             namecontrol = formDiv.getControl(nameattribute);
 
@@ -52,57 +55,78 @@
 
     };
 
-    $.fn.renderEntity = function(entityName) {
+    $.fn.renderEntity = function(attribute) {
+        var entityName = attribute.type;
+        if (!attribute.isReference) {
+            $.ajax({
+                url: formDiv.entityUrl.replace('{{name}}', entityName),
+                success: function(result) {
+                    if (result.entity) {
 
-        $.ajax({
-            url: formDiv.entityUrl.replace('{{name}}', entityName),
-            success: function(result) {
-                if (result.entity) {
+                        entity = result.entity;
 
-                    entity = result.entity;
-
-                    var entityattribute = entity;
-                    entityattribute.type = 'entity-open';
-                    entitycontrolOpen = formDiv.getControl(entityattribute);
-                    formDiv.appendHtmlText(entitycontrolOpen);
+                        var entityattribute = entity;
+                        entityattribute.type = 'entity-open';
+                        entitycontrolOpen = formDiv.getControl(entityattribute);
+                        formDiv.appendHtmlText(entitycontrolOpen);
 
 
-                    formDiv.patchNameField();
-                    formDiv.firstEntity = false;
+                        formDiv.patchNameField();
+                        formDiv.firstEntity = false;
 
-                    $.each(entity.attributes, function(k, attribute) {
-                        if (formDiv.dataObj) {
-                            attribute.value = formDiv.dataObj[attribute.name];
+                        $.each(entity.attributes, function(k, attribute) {
+                            if (formDiv.dataObj) {
+                                attribute.value = formDiv.dataObj[attribute.name];
 
-                            var x = attribute.value.replace(" ", '-');
-                            console.log("valueew is::" + x);
-                        }
-                        control = formDiv.getControl(attribute);
-                        if (control) {
-                            attribute.type = 'control-open';
-                            controlOpen = formDiv.getControl(attribute);
-                            attribute.type = 'control-close';
-                            controlClose = formDiv.getControl(attribute);
+//                                var x = attribute.value.replace(" ", '-');
+//                                console.log("valueew is::" + x);
+                            }
+                            control = formDiv.getControl(attribute);
+                            if (control) {
+                                attribute.type = 'control-open';
+                                controlOpen = formDiv.getControl(attribute);
+                                attribute.type = 'control-close';
+                                controlClose = formDiv.getControl(attribute);
 
-                            formDiv.appendHtmlText(controlOpen);
-                            formDiv.appendHtmlText(control);
-                            formDiv.appendHtmlText(controlClose);
-                        }
-                        else {
-                            formDiv.prefix.push(attribute.name);
-                            formDiv.renderEntity(attribute.type);
-                            formDiv.prefix.pop(attribute.name);
-                        }
-                    });
+                                formDiv.appendHtmlText(controlOpen);
+                                formDiv.appendHtmlText(control);
+                                formDiv.appendHtmlText(controlClose);
+                            }
+                            else {
+                                if (!attribute.isReference) {
+                                    formDiv.prefix.push(attribute.name);
+                                }
+                                formDiv.renderEntity(attribute);
+                                if (!attribute.isReference) {
+                                    formDiv.prefix.pop(attribute.name);
+                                }
 
-                    entityattribute.type = 'entity-close';
-                    entitycontrolClose = formDiv.getControl(entityattribute);
-                    formDiv.appendHtmlText(entitycontrolClose);
-                }
+                            }
+                        });
 
-            },
-            async: false
-        });
+                        entityattribute.type = 'entity-close';
+                        entitycontrolClose = formDiv.getControl(entityattribute);
+                        formDiv.appendHtmlText(entitycontrolClose);
+                    }
+
+                },
+                async: false
+            });
+        }
+        else {
+            attribute.master = attribute.type;
+            attribute.type = 'Reference';
+            control = formDiv.getControl(attribute);
+            attribute.type = 'control-open';
+            controlOpen = formDiv.getControl(attribute);
+            attribute.type = 'control-close';
+            controlClose = formDiv.getControl(attribute);
+
+            formDiv.appendHtmlText(controlOpen);
+            formDiv.appendHtmlText(control);
+            formDiv.appendHtmlText(controlClose);
+        }
+
     };
 
     $.fn.appendHtmlText = function(htmlText) {
@@ -139,21 +163,21 @@
     };
 
     $.fn.loadTemplate = function(type) {
-        var template = null;
-
-        $.ajax({
-            cache: true,
-            url: formDiv.themeUrl + '/' + formDiv.theme + '/' + type + '.js',
-            success: function(result) {
-
-                template = Handlebars.compile(result);
-            },
-            dataType: 'html',
-            async: false
-        });
-
-
+        var template = null;        
+        if(formDiv.templates.hasOwnProperty(type)){
+            template = template = formDiv.templates[type];
+        }else {            
+            $.ajax({
+                cache: true,
+                url: formDiv.themeUrl + '/' + formDiv.theme + '/' + type + '.js',
+                success: function(result) {
+                    formDiv.templates[type] = Handlebars.compile(result);
+                    template = formDiv.templates[type];
+                },
+                dataType: 'text',
+                async: false
+            });
+        }
         return template;
-
     };
 }(jQuery));

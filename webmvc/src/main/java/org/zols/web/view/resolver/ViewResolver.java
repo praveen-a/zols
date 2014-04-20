@@ -7,7 +7,7 @@ package org.zols.web.view.resolver;
 
 import java.util.Locale;
 import org.springframework.web.servlet.View;
-import org.thymeleaf.spring3.view.ThymeleafViewResolver;
+import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 /**
  *
@@ -29,7 +29,7 @@ public class ViewResolver extends ThymeleafViewResolver {
 //        TemplateProcessingParameters processingParameters
 //                = new TemplateProcessingParameters(this.getTemplateEngine().getConfiguration(), viewName, context);
 //        try {            
-//            Template template = this.getTemplateEngine().getTemplateRepository().getTemplate(processingParameters);
+//            Template template = this.getTemplateEngine().getTemplateStorage().getTemplate(processingParameters);
 //        } catch (Exception e) {            
 //            isValidTemplate = false ;
 //        }

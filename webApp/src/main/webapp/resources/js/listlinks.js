@@ -3,7 +3,7 @@
         $("#link_category").empty();
         $("#childLink").empty();
         $.ajax({
-            url: 'api/links/categories',
+            url: 'api/linkcategories',
             type: 'GET',
             dataType: "json",
             contentType: 'application/json',
@@ -111,7 +111,7 @@
     $.fn.removeCategory = function() {
         $.ajax(
                 {
-                    url: 'api/links/categories/' + $("#link_category").val(),
+                    url: 'api/linkcategories/' + $("#link_category").val(),
                     type: 'DELETE',
                     dataType: "json",
                     contentType: 'application/json',
@@ -148,7 +148,7 @@
     $(this).loadCategories();
 
     $('#addCategoryBtn').click(function() {
-        window.location = 'links/categories/add';
+        window.location = 'linkcategories/add';
     });
     $('#removeCategoryBtn').click(function() {
         $(this).removeCategory();

@@ -3,7 +3,7 @@ var URL = '../api/';
 function loadData(entityName, contentData) {
     $.extend($.jgrid.defaults, {
         autowidth: true,
-        shrinkToFit: true,
+        shrinkToFit: true,       
         datatype: 'json',
         jsonReader: {
             repeatitems: false,
@@ -26,7 +26,7 @@ function loadData(entityName, contentData) {
         rowList: [10, 20, 50, 100],
         altRows: true,
         loadError: function(xhr, status, error) {
-
+            $("#grid").clearGridData();
         }
     });
 
@@ -75,13 +75,14 @@ function loadData(entityName, contentData) {
     });
     var options = {
         url: URL + 'data/' + entityName,
-        editurl: URL,
+        editurl: URL + 'data/' + entityName,
         colModel: colModelDynamic,
         caption: contentData.label,
         pager: '#pager',
         height: 'auto',
         ondblClickRow: function(id) {
             //edit url
+            window.location = entityName + '/' + id;
         },
         formatter: {idName: "name"}
     };
@@ -91,7 +92,7 @@ function loadData(entityName, contentData) {
                     {search: false, addfunc: function() {
                             window.location = entityName + '/add';
                         }, editfunc: function(data) {
-                            window.location = entityName +'/'+ data ;
+                            window.location = entityName + '/' + data;
                         }}, //options
             {}, // edit options
                     {}, // add options 

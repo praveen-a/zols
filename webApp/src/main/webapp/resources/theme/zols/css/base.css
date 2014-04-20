@@ -29,14 +29,66 @@ header nav {
     width:100%;
     margin:auto;
 }
-
-header nav ul li {
-    display:inline;
-    padding:19px 0 0 42px;
+/** Menu start **/
+nav ul ul {
+    display: none;
+    position:absolute;
+    left: 80%; 
+    top:100%;
 }
 
+nav ul li:hover > ul {
+    display: block;
+}
+nav ul {
 
+    /* background: #efefef; */ 
+    background-color:#3F3F3F;
+    /* background: -webkit-linear-gradient(top, #efefef 0%,#bbbbbb 100%); */ 
+    /* box-shadow: 0px 0px 9px rgba(0,0,0,0.15); */
+    padding:12px 0 0 35px;
+    //border-radius: 10px;  
+    list-style: none;
+    position: relative;
+    display: inline-table;
+}
+nav ul:after {
+    content: ""; clear: both; display: block;
+}
 
+nav ul li {
+    float: left;
+}
+nav ul li:hover {
+    //background: #4b545f;
+    //background: linear-gradient(top, #4f5964 0%, #5f6975 40%);
+    //background: -moz-linear-gradient(top, #4f5964 0%, #5f6975 40%);
+    //background: -webkit-linear-gradient(top, #4f5964 0%,#5f6975 40%);
+    display: block; 
+    padding: 0px 0px;
+    margin:0px;
+    text-decoration: none;
+}
+
+nav ul ul {
+    //background: #5f6975; 
+    border-radius: 0px; padding: 0;
+    position: absolute; top: 70%;left:0px;
+}
+nav ul ul li {
+    float: none; 
+    //border-top: 1px solid #6b727c;
+    //border-bottom: 1px solid #575f6a;
+    position: relative;
+    padding: 0px 0px;
+    //background: #4b545f;
+}
+
+nav ul ul ul {
+    position: absolute; left: 100%; top:10%;
+}
+
+/** Menu end **/
 .content div#layout {
     background-color:#fff;
 }
@@ -76,7 +128,7 @@ header nav ul {
     padding:7px;
 }
 html body section {
-    padding: 0px 40px;
+    /* padding: 0px 40px; */
 
 }
 .contentpos {    
@@ -96,8 +148,21 @@ html body section {
     padding-top:204px;
 }
 
-footer .userpos {
-    padding:10px 30px 0 0;
+
+
+footer ul {
+    padding: 10px 10px 0 35px;
+    list-style: none;
+    position: relative;
+    display: inline-table;
+}
+footer li {
+    list-style: none;
+    display: inline;
+}
+
+footer li + li::before {
+    content: " | ";
 }
 
 header #headerbg .user a,header nav ul li a,footer .user a {
@@ -114,54 +179,3 @@ header #headerbg span,header nav ul li a:hover {
     width: 300px;
 }
 
-
-/* The CSS */
-.right-header select {
-    padding:3px;
-    margin: 0;
-    -webkit-border-radius:4px;
-    -moz-border-radius:4px;
-    border-radius:4px;
-    -webkit-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
-    -moz-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
-    box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
-    background: #f8f8f8;
-    color:#888;
-    border:none;
-    outline:none;
-    display: inline-block;
-    -webkit-appearance:none;
-    -moz-appearance:none;
-    appearance:none;
-    cursor:pointer;
-}
-
-/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    .right-header select {padding-right:18px}
-}
-
-.right-header label {position:relative}
-.right-header label:after {
-    content:'<>';
-    font:11px "Consolas", monospace;
-    color:#aaa;
-    -webkit-transform:rotate(90deg);
-    -moz-transform:rotate(90deg);
-    -ms-transform:rotate(90deg);
-    transform:rotate(90deg);
-    right:8px; top:2px;
-    padding:0 0 2px;
-    border-bottom:1px solid #ddd;
-    position:absolute;
-    pointer-events:none;
-}
-.right-header label:before {
-    content:'';
-    right:6px; top:0px;
-    width:20px; height:20px;
-    background:#f8f8f8;
-    position:absolute;
-    pointer-events:none;
-    display:block;
-}

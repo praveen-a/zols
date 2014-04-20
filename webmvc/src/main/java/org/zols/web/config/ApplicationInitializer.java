@@ -1,5 +1,6 @@
 package org.zols.web.config;
 
+import org.zols.securitymanager.config.filter.CorsFilter;
 import javax.servlet.FilterRegistration.Dynamic;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -24,11 +25,13 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 				servletContext.addServlet("dispatcher", new DispatcherServlet(rootContext));
 		dispatcher.setLoadOnStartup(1); 
 		dispatcher.addMapping("/");
+		dispatcher.setAsyncSupported(true);
 		
 		Dynamic filter = servletContext.addFilter("characterEncodingFilter", CharacterEncodingFilter.class);
 		filter.addMappingForUrlPatterns(null, false, "/*");
 		filter.setInitParameter("encoding", "UTF-8");
 		filter.setInitParameter("forceEncoding", "true");
+		filter.setAsyncSupported(true);
 		
 		servletContext.addFilter("corsFilter", CorsFilter.class)
 			.addMappingForUrlPatterns(null, false, "/*");

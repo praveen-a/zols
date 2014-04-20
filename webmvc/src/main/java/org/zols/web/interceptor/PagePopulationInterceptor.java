@@ -5,7 +5,7 @@
  */
 package org.zols.web.interceptor;
 
-import com.zols.linkmanager.LinkManager;
+import org.zols.linkmanager.LinkManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class PagePopulationInterceptor extends HandlerInterceptorAdapter {
         if (modelAndView != null) {            
             modelAndView.addObject("links", linkManager.getApplicationLinks());
             modelAndView.addObject("viewName",modelAndView.getViewName());
-            modelAndView.setViewName("home");
+            modelAndView.setViewName("index");
         }
     }
 }
